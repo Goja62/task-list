@@ -64,9 +64,9 @@ Route::get('/', function () {
 
 Route::get('/tasks', function () {
     return view('index', [
-        'tasks' => ModelsTask::latest()->get(),
+        'tasks' => ModelsTask::latest()->paginate(10),
     ]);
-})->name('tasks.index')->name('tasks.create');
+})->name('tasks.index');
 
 Route::view('tasks/create', 'create');
 
@@ -90,6 +90,12 @@ Route::put('/tasks/{task}', function (ModelsTask $task, TaskRequest $request) {
 
     return redirect()->route('tasks.show', ['task' => $task->id])->with('success', 'Task successfully updated');
 })->name('tasks.update');
+
+Route::delete('/tasks/{task}', function (ModelsTask $task) {
+    $task->delete();
+
+    return redirect()->route('tasks.index')->with('success', 'Task is deleted!');
+})->name('tasks.destroy');
 
 Route::fallback(function () {
     return 'No Route';
