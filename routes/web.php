@@ -68,7 +68,7 @@ Route::get('/tasks', function () {
     ]);
 })->name('tasks.index');
 
-Route::view('tasks/create', 'create');
+Route::view('tasks/create', 'create')->name('task.create');
 
 Route::get('/tasks/{task}/edit', function (ModelsTask $task) {
     return view('edit', ['task' => $task]);
@@ -96,6 +96,12 @@ Route::delete('/tasks/{task}', function (ModelsTask $task) {
 
     return redirect()->route('tasks.index')->with('success', 'Task is deleted!');
 })->name('tasks.destroy');
+
+Route::put('/tasks{task}/toggle-complete', function (ModelsTask $task) {
+    $task->toggleComplete();
+
+    return redirect()->back()->with('success', 'Task udated successfully');
+})->name('task.toggle-complete');
 
 Route::fallback(function () {
     return 'No Route';
